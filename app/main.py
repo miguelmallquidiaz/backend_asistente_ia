@@ -4,6 +4,7 @@ from typing import Dict
 import os
 import google.generativeai as genai
 from dotenv import load_dotenv
+from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 GEMINI_KEY = os.environ.get("GEMINI_API_KEY")
@@ -91,3 +92,15 @@ async def root():
 @app.post("/respuesta")
 def responder(data: PreguntaInput):
     return {"respuesta": generar_respuesta(data.pregunta)}
+
+origins = [
+    "https://9000-firebase-app-1750283637671.cluster-uf6urqn4lned4spwk4xorq6bpo.cloudworkstations.dev"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Solo tu dominio Angular
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
